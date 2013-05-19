@@ -30,9 +30,11 @@ then
   cd /
   return $?
  else
-  if [ "$PWD" != "${PWD%/$1/*}" ]
+  local front="${PWD%/$1/*}/"
+  local back="${PWD#$front}"
+  if [ "${back%%/*}" -a "${back%%/*}" != "$back" ]
   then
-   cd "${PWD/%\/$1\/*//$1}"
+   cd "$front${back%%/*}"
    return $?
   else
    return 1
