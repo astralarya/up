@@ -31,7 +31,9 @@ then
  else
   if [ "$PWD" != "${PWD%/$1/*}" ]
   then
-   cd "${PWD%/$1/*}/$1"
+   cd "${PWD/%\/$1\/*//$1}"
+  else
+   return 1
   fi
  fi
 else
