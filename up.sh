@@ -28,15 +28,18 @@ then
  then
   # special case for root
   cd /
+  return $?
  else
   if [ "$PWD" != "${PWD%/$1/*}" ]
   then
    cd "${PWD/%\/$1\/*//$1}"
+   return $?
   else
    return 1
   fi
  fi
 else
  cd ..
+ return $?
 fi
 }
