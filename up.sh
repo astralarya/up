@@ -21,7 +21,7 @@
 # Source this file in your shell's .*rc file
 
 
-function up {
+up() {
 if [ "$1" ]
 then
  if [ "$1" = '/' ]
@@ -45,3 +45,44 @@ else
  return $?
 fi
 }
+
+# tab completion generic
+_up() {
+    local word="$3"
+    local IFS='/'
+    local compreply 
+    compreply=( ${PWD#/} )
+
+    # generate reply 
+    local filter
+    for completion in "${compreply[@]}"
+    do
+        if [ -z "${completion/#$word*}" -a "${completion/#$word}" ]
+        then
+            filter+=("$completion")
+        fi
+    done
+    COMPREPLY=( "${filter[@]}" )
+}
+
+# tab completion bash
+_up_bash() {
+    # call generic tab completion function
+    _up "$COMP_CWORD" "${COMP_WORDS[@]}"
+}
+
+# tab completion zsh
+_up_zsh() {
+    # call generic tab completion function
+    _up "$COMP_CWORD" "${COMP_WORDS[@]}"
+    COMPREPLY=( "${(q)COMPREPLY[@]}" )
+}
+
+# setup tab completion
+if [ "$ZSH_VERSION" ]
+then
+    \autoload -U +X bashcompinit && \bashcompinit
+    \complete -F _up_zsh up
+else
+    \complete -F _up_bash up
+fi
