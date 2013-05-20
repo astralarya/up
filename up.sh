@@ -55,9 +55,31 @@ return 1
 # tab completion generic
 _up() {
     local word="$3"
+    local head="${word%%/*}"
+    local tail="${word#$head}"
+    local front="${PWD%/$head/*}/"
+    local back="${PWD#$front}"
     local IFS='/'
     local compreply 
     compreply=( ${PWD#/} )
+    compreply=( "${compreply[@]/%//}" )
+    local IFS=''
+    if [ "$word" != "$head" ]
+    then
+        if [ "${back%%/*}" -a "${back%%/*}" != "$back" ]
+        then
+            back="${back%%/*}"
+            # add subdirectories
+            local target="$front${back}"
+            if [ -d "$target" ]
+            then
+                while \read -r -d '' dir
+                do
+                    compreply+=("${dir/#$target/$head}/")
+                done < <(\find "$(\dirname -- "$(\readlink -f -- "$target/${tail}0" || \printf '/dev/null' )")" -mindepth 1 -maxdepth 1 -type d -print0 2> /dev/null)
+            fi
+        fi
+    fi
 
     # generate reply 
     local filter
@@ -88,7 +110,7 @@ _up_zsh() {
 if [ "$ZSH_VERSION" ]
 then
     \autoload -U +X bashcompinit && \bashcompinit
-    \complete -F _up_zsh up
+    \complete -o nospace -F _up_bash up
 else
-    \complete -F _up_bash up
+    \complete -o filenames -o nospace -F _up_bash up
 fi
