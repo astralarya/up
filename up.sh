@@ -30,20 +30,26 @@ then
   cd /
   return $?
  else
-  local front="${PWD%/$1/*}/"
+  local head="${1%%/*}"
+  local tail="${1#$head}"
+  local front="${PWD%/$head/*}/"
   local back="${PWD#$front}"
   if [ "${back%%/*}" -a "${back%%/*}" != "$back" ]
   then
-   cd "$front${back%%/*}"
-   return $?
-  else
-   return 1
+   local target="$front${back%%/*}$tail"
+   if [ -d "$target" ]
+   then
+    echo $target
+    cd "$target"
+    return $?
+   fi
   fi
  fi
 else
  cd ..
  return $?
 fi
+return 1
 }
 
 # tab completion generic
