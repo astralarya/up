@@ -14,6 +14,8 @@ up [PATTERN]
 
 Change current directory to the closest parent that matches PATTERN
 
+If PATTERN contains a slash, everything after the slash is considered a subdirectory path relative to the closest parent that matches head (first part) of PATTERN
+
 ## License
 
 up - v0
