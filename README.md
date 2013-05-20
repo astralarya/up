@@ -18,7 +18,7 @@ If PATTERN contains a slash, everything after the slash is considered a subdirec
 
 ## License
 
-up - v0
+up - v1.0
 
 Copyright (C) 2013  Mara Kim
 

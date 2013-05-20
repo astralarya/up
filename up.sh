@@ -1,4 +1,4 @@
-# up
+# up - v1.0
 # Jump to parent directory
 #
 # Copyright (C) 2013 Mara Kim
